@@ -24,7 +24,6 @@ public with sharing class ContactTriggerTest {
             System.assertEquals('test' + i, con.Current_Program_Name__c);
             i++;
         }
-        //System.assertEquals('test0',[SELECT name, Current_Program_Name__c FROM Contact WHERE Lastname = 'test0' LIMIT 1].Current_Program_Name__c);
 
     }
     @isTest
@@ -46,7 +45,6 @@ public with sharing class ContactTriggerTest {
             consAfterInsert[i].Current_Program__c = progs[199-i].id;
             
         }
-        //system.debug(consAfterInsert[0]);
         update consAfterInsert;
         Test.stopTest();
         List<Contact> consEnd = new List<Contact>([SELECT name, Current_Program_Name__c FROM Contact ORDER BY name]);
@@ -56,9 +54,6 @@ public with sharing class ContactTriggerTest {
             System.debug('test' + (i-1) + '==>' + con.Current_Program_Name__c);
             System.assertEquals('test' + (i-1), con.Current_Program_Name__c);
             i--;
-        }
-        //system.debug([SELECT name, Current_Program_Name__c FROM Contact WHERE Lastname = 'test0' LIMIT 1].Current_Program_Name__c);
-        //System.assertEquals('test199',[SELECT name, Current_Program_Name__c FROM Contact WHERE Lastname = 'test0' LIMIT 1].Current_Program_Name__c);
-        
+        }   
     }
 }
