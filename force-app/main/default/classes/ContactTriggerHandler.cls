@@ -12,8 +12,8 @@ public class ContactTriggerHandler extends TriggerHandler{
         List<Id> programIds = new List<Id>();
         Map <ID,Program__c> programNames = new Map<ID,Program__c>();
 
-        for (Contact i : (List<Contact>)Trigger.New){
-            programIds.add(i.Current_Program__c);
+        for (Contact con : (List<Contact>)Trigger.New){
+            programIds.add(con.Current_Program__c);
         }
         programNames.putAll([SELECT Id, Name FROM Program__c WHERE Id IN :programIds]);
 
