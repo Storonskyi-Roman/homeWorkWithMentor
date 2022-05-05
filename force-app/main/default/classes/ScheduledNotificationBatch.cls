@@ -1,6 +1,5 @@
 public class ScheduledNotificationBatch implements Database.Batchable<sObject>, Database.stateful {
-    
-    private string linkStart = 'https://redtag107-dev-ed.lightning.force.com/lightning/r/Contact/';
+
     @TestVisible public static Integer emailLimits;
 
     public Database.QueryLocator  start(Database.BatchableContext bc) {
@@ -22,22 +21,24 @@ public class ScheduledNotificationBatch implements Database.Batchable<sObject>, 
         }
 
         List<User> owners = new List<User>([SELECT Id, email FROM User WHERE Id IN :ownerIdMap.keySet()]);
-
+        List<Messaging.SingleEmailMessage> mailsToSend = new List<Messaging.SingleEmailMessage>();
         for(User owner : owners){
             string massageBody = '<p>Here is a list of contacts turning 18 in 3 month:</p>';
             for(Contact con : ownerIdMap.get(owner.Id)){
-                massageBody +=  '<p><a href = \'' + linkStart +con.Id +'/view\'>' + con.Name + '</a> - ' + con.Birthdate + '</p>';
+                massageBody +=  '<p><a href = \'' + URL.getSalesforceBaseUrl().toExternalForm()+ '/' +con.Id +'/view\'>' + con.Name + '</a> - ' + con.Birthdate + '</p>';
                 //{Contact.Name (link to Contact)} - {Contact.Birthdate}
             }
 
             list<String> mailAdress= new list<string>{owner.email};
-            Messaging.SingleEmailMessage mailToSend = new Messaging.SingleEmailMessage();
-            mailToSend.setToAddresses(mailAdress);
-            mailToSend.Subject = 'Contacts Turning 18';
-            mailToSend.setHtmlBody(massageBody);
-            Messaging.sendEmail(new Messaging.SingleEmailMessage[] { mailToSend });
-            ScheduledNotificationBatch.emailLimits = Limits.getEmailInvocations();
-        }  
+            Messaging.SingleEmailMessage mailToCurrentOwner = new Messaging.SingleEmailMessage();
+            mailToCurrentOwner.setToAddresses(mailAdress);
+            mailToCurrentOwner.Subject = 'Contacts Turning 18';
+            mailToCurrentOwner.setHtmlBody(massageBody);
+            mailsToSend.add(mailToCurrentOwner);
+            
+        }
+        Messaging.sendEmail(mailsToSend);
+        ScheduledNotificationBatch.emailLimits = Limits.getEmailInvocations();  
     }
 
     public void finish(Database.BatchableContext bc){
