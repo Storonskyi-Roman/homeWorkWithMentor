@@ -14,7 +14,7 @@ public with sharing class ServicesListController {
         String ContactId = ApexPages.currentPage().getParameters().get('ContactId');
         Id recordTypeId = Schema.SObjectType.Service__c.getRecordTypeInfosByName().get(recordType).getRecordTypeId();
 
-        String query = 'SELECT id FROM Service__c WHERE RecordTypeId = \'' + recordTypeId +
+        String query = 'SELECT Id FROM Service__c WHERE RecordTypeId = \'' + recordTypeId +
                         + '\' AND Service_Date__c >= ' + startDate + ' AND Service_Date__c <= ' + endDate +
                         + ' AND Contact__c = \'' + ContactId + '\'';
 
