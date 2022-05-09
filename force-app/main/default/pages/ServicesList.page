@@ -1,0 +1,8 @@
+<apex:page renderAs="pdf" Controller="ServicesListController" >
+<apex:pageBlock>
+    <apex:repeat value="{! services }" var="service">
+        <apex:detail subject="{! service }" relatedList="false" title = "false" showChatter = "false" />
+    </apex:repeat> 
+</apex:pageBlock>
+
+</apex:page> 

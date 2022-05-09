@@ -1,0 +1,27 @@
+<apex:page controller="ServicesListController" docType="html-5.0">
+<!-- Begin Default Content REMOVE THIS -->
+<h1>Congratulations</h1>
+
+<apex:form >
+    <apex:pageBlock>
+        Type
+        <apex:selectList size="1" value="{! recordType }"> 
+            <apex:selectOptions value="{! typeItems }"/>  
+        </apex:selectList>
+    </apex:pageBlock>
+    <apex:pageBlock>
+        Start date
+        <apex:input type="date" value="{! startDate }" title = "Start date"/>
+    </apex:pageBlock>
+    <apex:pageBlock>
+        End date
+        <apex:input type="date" value="{! endDate }" title = "End date"/>
+    </apex:pageBlock>
+        <apex:pageblock >
+            <apex:commandlink action="{! GeneratePDF }" target="_blank">
+                <apex:commandButton value="Generate PDF"/>
+            </apex:commandLink>
+        </apex:pageblock>
+</apex:form>
+
+</apex:page>
