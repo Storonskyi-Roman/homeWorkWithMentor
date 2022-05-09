@@ -3,8 +3,8 @@ public class ScheduledNotificationBatch implements Database.Batchable<sObject>, 
     @TestVisible public static Integer emailLimits;
 
     public Database.QueryLocator  start(Database.BatchableContext bc) {
-        string threeMonthAgo = ('' + date.today().addYears(-18).addMonths(3)).substring(0,10);
-        string query =  'SELECT Id, Name, Birthdate, OwnerId FROM Contact WHERE Birthdate = ' + threeMonthAgo;
+        String threeMonthAgo = ('' + date.today().addYears(-18).addMonths(3)).subString(0,10);
+        String query =  'SELECT Id, Name, Birthdate, OwnerId FROM Contact WHERE Birthdate = ' + threeMonthAgo;
         return Database.getQueryLocator(query);
     }
 
@@ -23,13 +23,13 @@ public class ScheduledNotificationBatch implements Database.Batchable<sObject>, 
         List<User> owners = new List<User>([SELECT Id, email FROM User WHERE Id IN :ownerIdMap.keySet()]);
         List<Messaging.SingleEmailMessage> mailsToSend = new List<Messaging.SingleEmailMessage>();
         for(User owner : owners){
-            string massageBody = '<p>Here is a list of contacts turning 18 in 3 month:</p>';
+            String massageBody = '<p>Here is a list of contacts turning 18 in 3 month:</p>';
             for(Contact con : ownerIdMap.get(owner.Id)){
                 massageBody +=  '<p><a href = \'' + URL.getSalesforceBaseUrl().toExternalForm()+ '/' +con.Id +'/view\'>' + con.Name + '</a> - ' + con.Birthdate + '</p>';
                 //{Contact.Name (link to Contact)} - {Contact.Birthdate}
             }
 
-            list<String> mailAdress= new list<string>{owner.email};
+            list<String> mailAdress= new list<String>{owner.email};
             Messaging.SingleEmailMessage mailToCurrentOwner = new Messaging.SingleEmailMessage();
             mailToCurrentOwner.setToAddresses(mailAdress);
             mailToCurrentOwner.Subject = 'Contacts Turning 18';
@@ -42,7 +42,7 @@ public class ScheduledNotificationBatch implements Database.Batchable<sObject>, 
     }
 
     public void finish(Database.BatchableContext bc){
-            list<String> mailAdress= new list<string>{UserInfo.getUserEmail()};
+            list<String> mailAdress= new list<String>{UserInfo.getUserEmail()};
             Messaging.SingleEmailMessage mailToSend = new Messaging.SingleEmailMessage();
             mailToSend.setToAddresses(mailAdress);
             mailToSend.Subject = 'ScheduledNotificationBatch done';
