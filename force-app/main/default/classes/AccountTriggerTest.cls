@@ -14,6 +14,27 @@ public with sharing class AccountTriggerTest {
         System.assertEquals(10, relatedOpportunities.size(), 'Opportunities are created');
     }
 
+    @isTest
+    public static void TestUpdateRelatedOpp(){
+        List<Account> accounts = new List<Account>([SELECT id, Name, CreatedDate, (SELECT id, Name FROM Opportunities) FROM Account]);
+        Test.startTest();
+        Integer i = 0;
+        for(Account acc : accounts){
+            for(Opportunity opp : acc.Opportunities){
+                System.assertEquals(acc.Name + acc.CreatedDate.Month() + acc.CreatedDate.Year(), opp.Name, 'Opp name befor Update is correct');
+            }
+            acc.Name = '1' + acc.Name;
+        }
+        update accounts;
+        Test.stopTest();
+        accounts = [SELECT id, Name, CreatedDate, (SELECT id, Name FROM Opportunities) FROM Account];
+        for(Account acc : accounts){
+            for(Opportunity opp : acc.Opportunities){
+                System.assertEquals(acc.Name + acc.CreatedDate.Month() + acc.CreatedDate.Year(), opp.Name, 'Opp name after Update is correct');
+            }
+        }
+
+    }
 
     @isTest
     public static void TestDeleteRelatedOpp(){
