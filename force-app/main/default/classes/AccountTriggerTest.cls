@@ -16,7 +16,7 @@ public with sharing class AccountTriggerTest {
 
     @isTest
     public static void TestUpdateRelatedOpp(){
-        List<Account> accounts = new List<Account>([SELECT id, Name, CreatedDate, (SELECT id, Name FROM Opportunities) FROM Account]);
+        List<Account> accounts = new List<Account>([SELECT Id, Name, CreatedDate, (SELECT Id, Name FROM Opportunities) FROM Account]);
         Test.startTest();
         Integer i = 0;
         for(Account acc : accounts){
@@ -27,7 +27,7 @@ public with sharing class AccountTriggerTest {
         }
         update accounts;
         Test.stopTest();
-        accounts = [SELECT id, Name, CreatedDate, (SELECT id, Name FROM Opportunities) FROM Account];
+        accounts = [SELECT Id, Name, CreatedDate, (SELECT Id, Name FROM Opportunities) FROM Account];
         for(Account acc : accounts){
             for(Opportunity opp : acc.Opportunities){
                 System.assertEquals(acc.Name + acc.CreatedDate.Month() + acc.CreatedDate.Year(), opp.Name, 'Opp name after Update is correct');
@@ -38,7 +38,7 @@ public with sharing class AccountTriggerTest {
 
     @isTest
     public static void TestDeleteRelatedOpp(){
-        List<Account> accounts = new List<Account>([SELECT id FROM Account]);
+        List<Account> accounts = new List<Account>([SELECT Id FROM Account]);
         List<Opportunity> relatedOpportunities = new List<Opportunity>([SELECT Id FROM Opportunity]);
         System.assertEquals(10, relatedOpportunities.size(), 'Opportunities are created');
         Test.startTest();

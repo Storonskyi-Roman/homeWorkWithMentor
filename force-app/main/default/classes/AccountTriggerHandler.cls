@@ -22,7 +22,7 @@ public class AccountTriggerHandler extends TriggerHandler {
     }
 
     public void CheckRelatedOpp(){
-        List<Account> accounts = new List<Account>([SELECT id, Name, CreatedDate, (SELECT id, Name FROM Opportunities) FROM Account WHERE Id IN :Trigger.New]);
+        List<Account> accounts = new List<Account>([SELECT Id, Name, CreatedDate, (SELECT Id, Name FROM Opportunities) FROM Account WHERE Id IN :Trigger.New]);
         List<Opportunity> oppsToUpdate = new List<Opportunity>();
         for(Account acc : accounts){
             if(Trigger.OldMap.get(acc.Id) != Trigger.NewMap.get(acc.Id)){
@@ -41,7 +41,7 @@ public class AccountTriggerHandler extends TriggerHandler {
         List<Opportunity> OppsToDelete = new List<Opportunity>();
         List<Messaging.SingleEmailMessage> mailsToSend = new List<Messaging.SingleEmailMessage>();
 
-        for (Account acc : [SELECT id, Name, (SELECT id, Name, Amount FROM Opportunities) FROM Account WHERE id IN :Trigger.Old]){
+        for (Account acc : [SELECT Id, Name, (SELECT Id, Name, Amount FROM Opportunities) FROM Account WHERE Id IN :Trigger.Old]){
             string massage = 'Hi ' + UserInfo.getUserName() + '\nDue to deletion of Account ' + acc.Name + ' all next related Opportunities were deleted as well: \n';
             Integer i = 1;
             for(Opportunity opp : acc.Opportunities){
