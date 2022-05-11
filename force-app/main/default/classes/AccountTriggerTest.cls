@@ -43,6 +43,7 @@ public with sharing class AccountTriggerTest {
         System.assertEquals(10, relatedOpportunities.size(), 'Opportunities are created');
         Test.startTest();
         delete accounts;
+        System.assertEquals(0,Limits.getEmailInvocations(), 'Email limits check');
         Test.stopTest();
         relatedOpportunities = [SELECT Id FROM Opportunity];
         System.assertEquals(0, relatedOpportunities.size(), 'Opportunities are deleted');

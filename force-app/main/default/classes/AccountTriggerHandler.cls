@@ -1,18 +1,18 @@
 public class AccountTriggerHandler extends TriggerHandler {
 
     public override void afterInsert(){
-        CreateRelatedOpp();
+        createRelatedOpp();
     }
 
     public override void beforeUpdate(){
-        CheckRelatedOpp();
+        checkRelatedOpp();
     }
 
     public override void beforeDelete(){
-        DeleteRelatedOpp();
+        deleteRelatedOpp();
     }
 
-    public void CreateRelatedOpp(){
+    public void createRelatedOpp(){
         List<Opportunity> relatedOpportunities = new List<Opportunity>();
         for(Account acc :(List<Account>)Trigger.New) {
             relatedOpportunities.add(new Opportunity(Name = acc.Name + Date.Today().Month() + Date.Today().Year() ,
@@ -21,14 +21,18 @@ public class AccountTriggerHandler extends TriggerHandler {
         insert relatedOpportunities;
     }
 
-    public void CheckRelatedOpp(){
-        List<Account> accounts = new List<Account>([SELECT Id, Name, CreatedDate, (SELECT Id, Name FROM Opportunities) FROM Account WHERE Id IN :Trigger.New]);
+    public void checkRelatedOpp(){
+
+        Map<Id, Account> newMap = new Map<Id, Account>((Map<Id, Account>)Trigger.newMap);
+        Map<Id, Account> oldMap = new Map<Id, Account>((Map<Id, Account>)Trigger.oldMap);
+        List<Account> accounts = [SELECT Id, Name, (SELECT Id, Name FROM Opportunities) FROM Account WHERE Id IN :newMap.keySet()];
+
         List<Opportunity> oppsToUpdate = new List<Opportunity>();
         for(Account acc : accounts){
-            if(Trigger.OldMap.get(acc.Id) != Trigger.NewMap.get(acc.Id)){
-                for(Opportunity RelatedOpp : acc.Opportunities){
-                    if(RelatedOpp.Name.contains(acc.Name)){
-                        RelatedOpp.Name = RelatedOpp.Name.replace(acc.Name, ((Account)Trigger.NewMap.get(acc.Id)).Name);
+            if(oldMap.get(acc.Id).Name != newMap.get(acc.Id).Name){
+                for(Opportunity relatedOpp : acc.Opportunities){
+                    if(relatedOpp.Name.contains(acc.Name)){
+                        relatedOpp.Name = RelatedOpp.Name.replace(acc.Name, newMap.get(acc.Id).Name);
                         oppsToUpdate.add(RelatedOpp);
                     }
                 }
@@ -37,11 +41,11 @@ public class AccountTriggerHandler extends TriggerHandler {
         update oppsToUpdate;
     }
 
-    public void DeleteRelatedOpp(){
+    public void deleteRelatedOpp(){
         List<Opportunity> OppsToDelete = new List<Opportunity>();
         List<Messaging.SingleEmailMessage> mailsToSend = new List<Messaging.SingleEmailMessage>();
 
-        for (Account acc : [SELECT Id, Name, (SELECT Id, Name, Amount FROM Opportunities) FROM Account WHERE Id IN :Trigger.Old]){
+        for (Account acc : [SELECT Id, Name, (SELECT Id, Name, Amount FROM Opportunities) FROM Account WHERE Id IN :Trigger.OldMap.keySet()]){
             string massage = 'Hi ' + UserInfo.getUserName() + '\nDue to deletion of Account ' + acc.Name + ' all next related Opportunities were deleted as well: \n';
             Integer i = 1;
             for(Opportunity opp : acc.Opportunities){
