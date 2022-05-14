@@ -1,27 +1,74 @@
 <apex:page controller="ServicesListController" docType="html-5.0">
-<!-- Begin Default Content REMOVE THIS -->
-<h1>Congratulations</h1>
-
+    <style type="text/css">
+        .parent-div{
+            width: 100%;
+        }
+        .child-div{
+            display: inline-block;
+            width: 45%;
+        }
+        .content-right{
+            position: relative;
+            float: right;
+        }
+        .content-left{
+            position: relative;
+            float: left;
+            
+        }
+        p{
+            font-size: 13.5px;
+        }
+    </style>
 <apex:form >
-    <apex:pageBlock>
-        Type
-        <apex:selectList size="1" value="{! recordType }"> 
-            <apex:selectOptions value="{! typeItems }"/>  
-        </apex:selectList>
-    </apex:pageBlock>
-    <apex:pageBlock>
-        Start date
-        <apex:input type="date" value="{! startDate }" title = "Start date"/>
-    </apex:pageBlock>
-    <apex:pageBlock>
-        End date
-        <apex:input type="date" value="{! endDate }" title = "End date"/>
-    </apex:pageBlock>
-        <apex:pageblock >
-            <apex:commandlink action="{! GeneratePDF }" target="_blank">
-                <apex:commandButton value="Generate PDF"/>
-            </apex:commandLink>
-        </apex:pageblock>
+    <div class = "parent-div">
+        <p>Hello, enter some data</p>
+    </div>
+    <div class = "blue-border">
+        <div class="parent-div">
+            <div class="child-div">
+                <p class="content-left">Record type</p>
+            </div>
+            <div class="child-div">
+                <p class = "content-right">
+                    <apex:selectList size="1" value="{! recordType }" > 
+                        <apex:selectOptions value="{! typeItems }"/>  
+                    </apex:selectList>
+                </p>
+            </div>
+        </div>
+        
+        <div class="parent-div">
+            <div class="child-div">
+                <p class="content-left">Start date</p>
+            </div>
+            <div class="child-div">
+                <p class = "content-right">
+                    <apex:input type="date" value="{! startDate }" title = "Start date"/>
+                </p>
+            </div>
+        </div>
+
+        <div class = "parent-div">
+            <div class = "child-div">
+                <p class = "content-left">End date</p>
+            </div>
+            <div class = "child-div">
+                <p class = "content-right">
+                    <apex:input type = "date" value = "{! endDate }" title = "End date"/>
+                </p>
+            </div>
+        </div>
+        <div class="child-div">
+        </div>
+        <div class="child-div">
+            <p class = "content-right">
+                <apex:commandlink action = "{! GeneratePDF }" target = "_blank">
+                    <apex:commandButton value = "Generate PDF"/>
+                </apex:commandLink>
+            </p>
+        </div>
+    </div>
 </apex:form>
 
 </apex:page>
