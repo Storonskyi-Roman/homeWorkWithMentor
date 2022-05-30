@@ -1,0 +1,19 @@
+.flex-container{
+    display: flex;
+    width: auto;
+    
+}
+
+.flex-item{
+    width: 50%;
+    min-height: 40px;
+    
+}
+
+.container{
+    padding: 12px;
+    background-color: whitesmoke;
+    border-radius: 3px;
+}
+
+
