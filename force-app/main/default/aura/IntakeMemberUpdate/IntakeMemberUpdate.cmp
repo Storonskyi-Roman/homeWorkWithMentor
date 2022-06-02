@@ -1,0 +1,16 @@
+
+<aura:component controller="IntakeMemberUpdateControlle" implements="force:lightningQuickAction, force:hasRecordId">
+
+    <aura:attribute name="Member" type="String"></aura:attribute>
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}"></aura:handler>
+
+    <lightning:recordEditForm recordId="{!v.Member}" objectApiName="Intake_Member__c">
+        <lightning:messages />
+        <lightning:inputField fieldName="Gender__c" />
+        <lightning:inputField fieldName="Age__c" />
+        <lightning:inputField fieldName="SSN__c" />
+        <lightning:button class="slds-m-top_small" variant="brand" type="submit" name="update" label="Update" />
+    </lightning:recordEditForm>
+
+
+</aura:component>
